@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Gestion Immobilière</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Écran de bienvenue -->
+        <div id="welcome-screen" class="screen active-screen">
+            <div class="title-container">
+                <h1>Jeu de Gestion<br>Immobilière</h1>
+                <div class="retro-button-container">
+                    <button id="start-button" class="retro-button">Commencer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Écran de configuration des équipes -->
+        <div id="team-setup-screen" class="screen">
+            <h2>Configuration des Équipes</h2>
+            <div class="teams-container">
+                <div class="team-card" data-team-id="1">
+                    <h3>Équipe 1</h3>
+                    <div class="color-indicator team1-color"></div>
+                    <div class="player-inputs">
+                        <input type="text" placeholder="Nom du joueur 1" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 2" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 3" class="player-input">
+                    </div>
+                    <div class="team-toggle">
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Actif</span>
+                    </div>
+                </div>
+                <div class="team-card" data-team-id="2">
+                    <h3>Équipe 2</h3>
+                    <div class="color-indicator team2-color"></div>
+                    <div class="player-inputs">
+                        <input type="text" placeholder="Nom du joueur 1" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 2" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 3" class="player-input">
+                    </div>
+                    <div class="team-toggle">
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Actif</span>
+                    </div>
+                </div>
+                <div class="team-card" data-team-id="3">
+                    <h3>Équipe 3</h3>
+                    <div class="color-indicator team3-color"></div>
+                    <div class="player-inputs">
+                        <input type="text" placeholder="Nom du joueur 1" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 2" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 3" class="player-input">
+                    </div>
+                    <div class="team-toggle">
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Actif</span>
+                    </div>
+                </div>
+                <div class="team-card" data-team-id="4">
+                    <h3>Équipe 4</h3>
+                    <div class="color-indicator team4-color"></div>
+                    <div class="player-inputs">
+                        <input type="text" placeholder="Nom du joueur 1" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 2" class="player-input">
+                        <input type="text" placeholder="Nom du joueur 3" class="player-input">
+                    </div>
+                    <div class="team-toggle">
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Actif</span>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons-container">
+                <button id="continue-button" class="retro-button">Continuer</button>
+            </div>
+        </div>
+
+        <!-- Écran de lancement de dé -->
+        <div id="dice-screen" class="screen">
+            <h2>Lancer le dé</h2>
+            <div class="active-team-display">
+                <span id="current-team-name">Équipe 1</span>
+                <div id="current-team-indicator" class="team1-color"></div>
+            </div>
+            <div class="dice-container">
+                <div id="dice" class="dice" data-value="1">
+                    <div class="dice-face" id="dice-face">
+                        <div class="dot center"></div>
+                    </div>
+                </div>
+                <button id="roll-dice-button" class="retro-button">Lancer</button>
+            </div>
+        </div>
+
+        <!-- Écran du plateau de jeu -->
+        <div id="board-screen" class="screen">
+            <div class="game-header">
+                <div class="team-info">
+                    <div class="turn-indicator">
+                        <span>Tour: </span>
+                        <span id="turn-counter">1</span>
+                    </div>
+                    <div class="active-team">
+                        <span>Équipe active: </span>
+                        <span id="active-team-name">Équipe 1</span>
+                        <div id="active-team-color" class="team1-color"></div>
+                    </div>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                        </svg>
+                    </div>
+                    <div id="game-timer" class="timer">05:00</div>
+                </div>
+                <button id="exit-button" class="exit-button">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="scores-container">
+                <div class="team-score team1" id="team1-score">
+                    <span class="team-name">Équipe 1</span>
+                    <span class="score">1500 K</span>
+                </div>
+                <div class="team-score team2" id="team2-score">
+                    <span class="team-name">Équipe 2</span>
+                    <span class="score">1000 K</span>
+                </div>
+                <div class="team-score team3 hidden" id="team3-score">
+                    <span class="team-name">Équipe 3</span>
+                    <span class="score">0 K</span>
+                </div>
+                <div class="team-score team4 hidden" id="team4-score">
+                    <span class="team-name">Équipe 4</span>
+                    <span class="score">0 K</span>
+                </div>
+            </div>
+            
+            <div class="game-board">
+                <!-- Le plateau de jeu sera généré dynamiquement en JS -->
+            </div>
+            
+            <div class="action-buttons">
+                <button id="roll-button" class="retro-button">Lancer Dé</button>
+                <button id="next-turn-button" class="retro-button">Tour Suivant</button>
+            </div>
+        </div>
+
+        <!-- Overlay du dé en plein écran -->
+        <div id="dice-fullscreen-overlay" class="dice-fullscreen-overlay">
+            <div class="dice-fullscreen-container">
+                <div id="fullscreen-dice" class="dice dice-fullscreen" data-value="1">
+                    <div class="dice-face">
+                        <!-- Les points du dé seront générés dynamiquement en JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modales -->
+        <div id="property-modal" class="modal">
+            <div class="modal-content">
+                <div class="property-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3 id="property-name">Maison du directeur</h3>
+                <p id="property-description">Petite maison de maître</p>
+                <div class="property-value">
+                    <p>Valeur Vénale :</p>
+                    <p id="property-value-amount">350 K</p>
+                </div>
+                <button id="property-continue" class="retro-button">Continuer</button>
+            </div>
+        </div>
+
+        <div id="video-modal" class="modal">
+            <div class="modal-content">
+                <div class="video-container">
+                    <svg viewBox="0 0 24 24" width="80" height="80" class="video-play-icon">
+                        <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"></path>
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                    <div class="video-progress">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                    <div id="video-duration" class="video-duration">00:15</div>
+                </div>
+                <button id="skip-video" class="retro-button">Sauter</button>
+            </div>
+        </div>
+
+        <div id="win-modal" class="modal">
+            <div class="modal-content">
+                <div class="win-badge">
+                    <div class="win-text">WIN!</div>
+                    <div class="dot top-left"></div>
+                    <div class="dot top-right"></div>
+                    <div class="dot bottom-left"></div>
+                    <div class="dot bottom-right"></div>
+                </div>
+                <h3>Félicitation !</h3>
+                <p>Vous avez accumulé</p>
+                <p id="final-score" class="final-score">1500 K</p>
+                <button id="replay-button" class="retro-button">Rejouer</button>
+            </div>
+        </div>
+
+        <div id="exit-modal" class="modal">
+            <div class="modal-content">
+                <p>Vous allez quitter le jeu !</p>
+                <div class="exit-buttons">
+                    <button id="confirm-exit" class="confirm-button">Confirmer</button>
+                    <button id="cancel-exit" class="cancel-button">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Bonus -->
+        <div id="bonus-modal" class="modal">
+            <div class="modal-content card-popup">
+                <div class="card-icon bonus-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3>Carte Bonus</h3>
+                <div class="bonus-amount">
+                    <p id="bonus-text">Vous avez gagné</p>
+                    <p id="bonus-amount" class="special-amount">+200 K</p>
+                </div>
+                <button id="bonus-continue" class="retro-button">Continuer</button>
+            </div>
+        </div>
+
+        <!-- Modal Facture -->
+        <div id="facture-modal" class="modal">
+            <div class="modal-content card-popup">
+                <div class="card-icon facture-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3>Facture</h3>
+                <div class="facture-details">
+                    <p id="facture-text">Vous devez payer</p>
+                    <p id="facture-amount" class="special-amount danger-amount">-300 K</p>
+                </div>
+                <button id="facture-continue" class="retro-button">Payer</button>
+            </div>
+        </div>
+
+        <!-- Modal Biens -->
+        <div id="biens-modal" class="modal">
+            <div class="modal-content card-popup">
+                <div class="card-icon biens-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3>Gestion de Biens</h3>
+                <p id="biens-text">Vous recevez un loyer de tous vos biens</p>
+                <p id="biens-amount" class="special-amount">+150 K</p>
+                <button id="biens-continue" class="retro-button">Encaisser</button>
+            </div>
+        </div>
+
+        <!-- Modal PDB -->
+        <div id="pdb-modal" class="modal">
+            <div class="modal-content card-popup">
+                <div class="card-icon pdb-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3>Protection des Biens</h3>
+                <p id="pdb-text">Vous payez pour la protection de vos propriétés</p>
+                <p id="pdb-amount" class="special-amount danger-amount">-100 K</p>
+                <button id="pdb-continue" class="retro-button">Payer</button>
+            </div>
+        </div>
+
+        <!-- Modal Interaction -->
+        <div id="interaction-modal" class="modal">
+            <div class="modal-content card-popup">
+                <div class="card-icon interaction-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                    </svg>
+                </div>
+                <h3>Interaction</h3>
+                <p id="interaction-text">Choisissez une équipe pour échanger 100K</p>
+                <div id="interaction-teams" class="team-selection">
+                    <!-- Les équipes seront ajoutées dynamiquement -->
+                </div>
+                <button id="interaction-skip" class="retro-button small-button">Passer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/gameData.js"></script>
+    <script src="js/gameUtils.js"></script>
+    <script src="js/gameState.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
