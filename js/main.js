@@ -200,7 +200,7 @@ function rollDice() {
     
     // Ajouter un son de dé qui roule
     try {
-        const rollSound = new Audio('assets/dice-roll.mp3');
+        const rollSound = new Audio('../assets/diceland.wav');
         rollSound.volume = 0.5;
         rollSound.play().catch(e => console.log('Pas de son disponible'));
     } catch (e) {
@@ -233,7 +233,7 @@ function rollDice() {
         
         // Joue un son quand le dé s'arrête
         try {
-            const landSound = new Audio('assets/dice-land.mp3');
+            const landSound = new Audio('../assets/dicelandBG.wav');
             landSound.volume = 0.5;
             landSound.play().catch(e => console.log('Pas de son disponible'));
         } catch (e) {
