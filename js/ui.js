@@ -413,7 +413,7 @@ function showWinModal(score, teamName = null) {
     document.body.classList.add('win-celebration');
     
     // Joue un son de victoire si disponible
-    const winSound = new Audio('assets/win-sound.mp3');
+    const winSound = new Audio('assets/win.wav');
     winSound.volume = 0.5;
     winSound.play().catch(e => console.log('Pas de son disponible'));
     
