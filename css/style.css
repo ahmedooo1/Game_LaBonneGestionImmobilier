@@ -4,7 +4,7 @@
     --secondary-color: #1e3799;
     --tertiary-color: #0c2461;
     --accent-color: #f6b93b;
-    --dark-color: #222f3e;
+    --dark-color: rgba(34, 47, 62,0.5);
     --light-color: #f5f6fa;
     --danger-color: #e55039;
     --success-color: #78e08f;
