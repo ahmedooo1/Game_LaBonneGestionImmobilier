@@ -114,25 +114,13 @@
 
         <!-- Écran du plateau de jeu -->
         <div id="board-screen" class="screen">
-            <div class="game-header">
-                <div class="team-info">
-                    <div class="turn-indicator">
-                        <span>Tour: </span>
-                        <span id="turn-counter">1</span>
-                    </div>
-                    <div class="active-team">
-                        <span>Équipe active: </span>
-                        <span id="active-team-name">Équipe 1</span>
-                        <div id="active-team-color" class="team1-color"></div>
-                    </div>
+            <div class="active-team-header">
+                <div class="turn-info">
+                    Tour: <span id="turn-counter" class="font-pixel">1</span> | Équipe active: <span id="active-team-name">Équipe 1</span>
                 </div>
-                <div class="timer-container">
-                    <div class="timer-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
-                        </svg>
-                    </div>
-                    <div id="game-timer" class="timer">05:00</div>
+                <div class="timer-display">
+                    <i class="timer-icon">⏱️</i>
+                    <span id="game-timer" class="timer">05:00</span>
                 </div>
                 <button id="exit-button" class="exit-button">
                     <svg viewBox="0 0 24 24" width="24" height="24">
@@ -141,27 +129,35 @@
                 </button>
             </div>
             
-            <div class="scores-container">
-                <div class="team-score team1" id="team1-score">
-                    <span class="team-name">Équipe 1</span>
-                    <span class="score">1500 K</span>
+            <div class="score-blocks">
+                <div class="team-score-block team1" id="team1-score-block">
+                    <div>Équipe 1</div>
+                    <div class="score">200 K</div>
                 </div>
-                <div class="team-score team2" id="team2-score">
-                    <span class="team-name">Équipe 2</span>
-                    <span class="score">1000 K</span>
-                </div>
-                <div class="team-score team3 hidden" id="team3-score">
-                    <span class="team-name">Équipe 3</span>
-                    <span class="score">0 K</span>
-                </div>
-                <div class="team-score team4 hidden" id="team4-score">
-                    <span class="team-name">Équipe 4</span>
-                    <span class="score">0 K</span>
+                <div class="team-score-block team2" id="team2-score-block">
+                    <div>Équipe 2</div>
+                    <div class="score">-200 K</div>
                 </div>
             </div>
             
-            <div class="game-board">
-                <!-- Le plateau de jeu sera généré dynamiquement en JS -->
+            <div class="game-board-container">
+                <div class="team-panel left-panel">
+                    <div id="team2-panel" class="team-panel-content"></div>
+                    <div id="team4-panel" class="team-panel-content"></div>
+                </div>
+                
+                <div class="game-board">
+                    <!-- Le plateau de jeu sera généré dynamiquement en JS -->
+                </div>
+                
+                <div class="team-panel right-panel">
+                    <div id="team1-panel" class="team-panel-content"></div>
+                    <div id="team3-panel" class="team-panel-content"></div>
+                </div>
+            </div>
+            
+            <div id="current-player-info" class="player-list-bottom">
+                <div class="player-list-content"></div>
             </div>
             
             <div class="action-buttons">

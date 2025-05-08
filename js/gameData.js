@@ -127,7 +127,8 @@ const INITIAL_GAME_STATE = {
             players: ['Pierre', 'Francis', 'Delphine'],
             color: 'team1-color',
             active: true,
-            position: 0
+            position: 0,
+            currentPlayer: 0 // New property to track the active player
         },
         2: {
             name: 'Équipe 2',
@@ -135,7 +136,8 @@ const INITIAL_GAME_STATE = {
             players: ['Paul', 'Ahmad', 'Estelle'],
             color: 'team2-color',
             active: true,
-            position: 0
+            position: 0,
+            currentPlayer: 0
         },
         3: {
             name: 'Équipe 3',
@@ -143,7 +145,8 @@ const INITIAL_GAME_STATE = {
             players: [],
             color: 'team3-color',
             active: false,
-            position: 0
+            position: 0,
+            currentPlayer: 0
         },
         4: {
             name: 'Équipe 4',
@@ -151,7 +154,8 @@ const INITIAL_GAME_STATE = {
             players: [],
             color: 'team4-color',
             active: false,
-            position: 0
+            position: 0,
+            currentPlayer: 0
         }
     },
     currentTurn: 1,

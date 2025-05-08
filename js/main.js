@@ -3,7 +3,10 @@
  */
 
 // Initialise le jeu au chargement de la page
-document.addEventListener('DOMContentLoaded', initGame);
+document.addEventListener('DOMContentLoaded', function() {
+    initGame();
+    updateTeamsCorners(); // Affiche les coins dès le chargement
+});
 
 function initGame() {
     // Initialise les gestionnaires d'événements
@@ -275,7 +278,9 @@ function rollDice() {
 function nextTurn() {
     const gameState = advanceTurn();
     updateTeamsDisplay();
-    
+    updatePlayerList(); // Update the player list display
+    updateTeamsCorners(); // Met à jour l'affichage des coins
+
     // Réactive le bouton de lancer de dé
     const rollButton = document.getElementById('roll-button');
     if (rollButton) rollButton.disabled = false;

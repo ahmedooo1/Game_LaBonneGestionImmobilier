@@ -69,13 +69,21 @@ function updateTeamScore(teamId, amount) {
  */
 function advanceTurn() {
     const gameState = getGameState();
-    
-    // Incrémente le compteur de tour
+    const activeTeam = gameState.teams[gameState.activeTeam];
+
+    if (!activeTeam) return gameState;
+
+    // Move to the next player in the active team
+    activeTeam.currentPlayer = (activeTeam.currentPlayer + 1) % activeTeam.players.length;
+
+    // If we loop back to the first player, switch to the next team
+    if (activeTeam.currentPlayer === 0) {
+        gameState.activeTeam = getNextActiveTeam(gameState.activeTeam, gameState.teams);
+    }
+
+    // Increment the turn counter
     gameState.currentTurn++;
-    
-    // Détermine la prochaine équipe active
-    gameState.activeTeam = getNextActiveTeam(gameState.activeTeam, gameState.teams);
-    
+
     return updateGameState(gameState);
 }
 
