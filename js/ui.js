@@ -498,8 +498,8 @@ function updateCurrentPlayerInfo() {
         // Créer un élément stylisé pour le joueur actif
         const playerElement = document.createElement('div');
         playerElement.className = 'active-player-highlight';
-        playerElement.style.borderColor = `var(--team${gameState.activeTeam}-color)`;
-        playerElement.innerHTML = `<span>Joueur actif: <strong>${playerName}</strong> (${activeTeam.name})</span>`;
+        playerElement.style.background  = `var(--team${gameState.activeTeam}-color)`;
+        playerElement.innerHTML = `<span> <strong>${playerName}</strong> (${activeTeam.name})</span>`;
         
         currentPlayerContainer.appendChild(playerElement);
     }

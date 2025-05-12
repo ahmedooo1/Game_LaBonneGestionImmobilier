@@ -51,14 +51,18 @@ function setupEventListeners() {
     });
     
     document.getElementById('continue-button').addEventListener('click', () => {
+                // Réinitialise complètement l'état du jeu avec des scores à 0
+                resetGameState();
         // Sauvegarde les informations des équipes avant de continuer
         saveTeamSetup();
-        showScreen('dice-screen');
+
+         showScreen('dice-screen');
         updateTeamsDisplay();
     });
     
     document.getElementById('roll-dice-button').addEventListener('click', () => {
         // Démarre le timer du jeu dès qu'on lance le dé la première fois
+        showScreen('board-screen');
         startGameTimer();
         rollDice();
     });

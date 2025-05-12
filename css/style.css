@@ -376,7 +376,7 @@ input:checked + .slider:before {
 }
 
 .center {
-    grid-area: 2 / 2;
+    /* grid-area: 2 / 2; */
     justify-self: center;
     align-self: center;
 }
@@ -1042,12 +1042,12 @@ input:checked + .slider:before {
     100% { transform: scale(1.2); }
 }
 
-@keyframes celebration-bg {
+/* @keyframes celebration-bg {
     0%, 100% { background-color: white; }
     25% { background-color: rgba(246, 185, 59, 0.1); }
-    50% { background-color: rgba(74, 105, 189, 0.1); }
+    50% { background-color: rgba(189, 74, 179, 0.1); }
     75% { background-color: rgba(229, 80, 57, 0.1); }
-}
+} */
 
 /* Points pour le dé normal */
 .dice-face .dot:not(.dice-fullscreen .dot) {
@@ -1242,6 +1242,7 @@ input:checked + .slider:before {
     border-radius: 6px;
     color: white;
     font-weight: bold;
+    margin: 12px;
 }
 
 .team-score-block.team1 {
@@ -1298,7 +1299,7 @@ input:checked + .slider:before {
 }
 
 .active-player-highlight {
-    background: linear-gradient(to right, rgba(246, 185, 59, 0.2), rgba(246, 185, 59, 0.05));
+    background: linear-gradient(to right, rgb(246, 185, 59, 0.2), rgba(246, 185, 59, 0.05));
     color: white;
     font-weight: bold;
     padding: 0.3rem 0.8rem;
