@@ -641,7 +641,7 @@ input:checked + .slider:before {
 }
 
 .board-cell.bonus {
-    background-color: #e74c3c;
+    background-color: #c4ba2d;
 }
 
 .board-cell.facture {
@@ -653,7 +653,7 @@ input:checked + .slider:before {
 }
 
 .board-cell.biens {
-    background-color: #f39c12;
+    background-color: #ffffff;
 }
 
 .board-cell.pdb {

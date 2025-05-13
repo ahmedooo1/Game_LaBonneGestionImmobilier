@@ -55,7 +55,6 @@ function setupEventListeners() {
                 resetGameState();
         // Sauvegarde les informations des équipes avant de continuer
         saveTeamSetup();
-
          showScreen('dice-screen');
         updateTeamsDisplay();
     });
@@ -501,7 +500,7 @@ function handleBiensCard() {
 }
 
 function handlePDBCard() {
-    // Simule un effet aléatoire du PDB (Protection Des Biens)
+    // Simule un effet aléatoire du PDB
     const effects = [
         {message: "Réunion de copropriété", amount: -30},
         {message: "Dividendes reçus", amount: 100},
