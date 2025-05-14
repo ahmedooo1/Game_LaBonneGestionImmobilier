@@ -17,7 +17,7 @@ function initGame() {
     
     // Initialize le premier écran
     showScreen('welcome-screen');
-    
+
     // Précharge les images depuis assets
     preloadAssets();
 }
@@ -40,17 +40,61 @@ function preloadAssets() {
     });
 }
 
+let dicelandBG;
+let landSound;
+
+function blamSoundEffect(){
+
+    // Joue un son quand le dé s'arrête
+    try {
+       landSound = new Audio('../assets/blam.wav');
+       landSound.volume = 0.5;
+      
+       landSound.play().catch(e => console.log('Pas de son disponible'));
+   } catch (e) {
+       console.log('Audio non supporté');
+   }
+}
+
+
 function setupEventListeners() {
     // Boutons de navigation entre les écrans
     document.getElementById('start-button').addEventListener('click', () => {
+        
+  
         // Efface complètement le localStorage pour repartir de zéro
         localStorage.clear();
         // Réinitialise l'état du jeu avec les scores à 0
         resetGameState();
         showScreen('team-setup-screen');
-    });
-    
+
+
+        if (dicelandBG) {
+            dicelandBG.pause();
+            dicelandBG.currentTime = 0; // Réinitialise le temps de lecture à 0
+        }
+             // Joue un son quand le dé s'arrête
+             try {
+                landSound = new Audio('../assets/bigenGame.wav');
+                landSound.volume = 0.5;
+            
+                landSound.play().catch(e => console.log('Pas de son disponible'));
+            } catch (e) {
+                console.log('Audio non supporté');
+            }
+
+    });   
+
     document.getElementById('continue-button').addEventListener('click', () => {
+
+   
+        if (landSound) {
+            landSound.pause();
+            landSound.currentTime = 0; // Réinitialise le temps de lecture à 0
+        }
+             // Joue un son quand le dé s'arrête
+             blamSoundEffect();
+
                 // Réinitialise complètement l'état du jeu avec des scores à 0
                 resetGameState();
         // Sauvegarde les informations des équipes avant de continuer
@@ -60,6 +104,9 @@ function setupEventListeners() {
     });
     
     document.getElementById('roll-dice-button').addEventListener('click', () => {
+        blamSoundEffect();
+               // Joue un son quand le dé s'arrête
+               dicelandBGSound();
         // Démarre le timer du jeu dès qu'on lance le dé la première fois
         showScreen('board-screen');
         startGameTimer();
@@ -67,23 +114,28 @@ function setupEventListeners() {
     });
     
     document.getElementById('roll-button').addEventListener('click', () => {
+        blamSoundEffect();
         rollDice();
     });
     
     document.getElementById('next-turn-button').addEventListener('click', () => {
+        blamSoundEffect();
         nextTurn();
     });
     
     document.getElementById('exit-button').addEventListener('click', () => {
+        blamSoundEffect();
         showExitModal();
     });
     
     // Gestion des modales
     document.getElementById('property-continue').addEventListener('click', () => {
+        blamSoundEffect();
         toggleModal('property-modal', false);
     });
     
     document.getElementById('skip-video').addEventListener('click', () => {
+        blamSoundEffect();
         // Arrête le timer de la vidéo
         if (window.videoTimer) {
             clearInterval(window.videoTimer);
@@ -92,6 +144,7 @@ function setupEventListeners() {
     });
     
     document.getElementById('replay-button').addEventListener('click', () => {
+        blamSoundEffect();
         // Efface complètement le localStorage
         localStorage.clear();
         
@@ -121,6 +174,8 @@ function setupEventListeners() {
     });
     
     document.getElementById('confirm-exit').addEventListener('click', () => {
+        blamSoundEffect();
+
         // Ferme la modale
         toggleModal('exit-modal', false);
         
@@ -135,17 +190,19 @@ function setupEventListeners() {
             clearInterval(window.gameTimerInterval);
         }
         
+      
+        location.reload();
         // Revient à l'écran d'accueil
         showScreen('welcome-screen');
-        
+  
         console.log("Jeu quitté, localStorage effacé");
     });
     
     document.getElementById('cancel-exit').addEventListener('click', () => {
+        blamSoundEffect();
         toggleModal('exit-modal', false);
     });
 }
-
 // Sauvegarde les informations des équipes
 function saveTeamSetup() {
     const gameState = getGameState();
@@ -182,7 +239,18 @@ function saveTeamSetup() {
     // Sauvegarde l'état mis à jour
     updateGameState(gameState);
 }
-
+function dicelandBGSound(){
+    try {
+        const dicelandBG = new Audio('../assets/dicelandBG.wav');
+        dicelandBG.volume = 0.5;
+        dicelandBG.onended = function() {
+            this.play().catch(e => console.log('Pas de son disponible'));
+        };
+        dicelandBG.play().catch(e => console.log('Pas de son disponible'));
+    } catch (e) {
+        console.log('Audio non supporté');
+    }
+}
 // Gère le lancement du dé
 function rollDice() {
     // Désactive le bouton pendant l'animation
@@ -237,20 +305,21 @@ function rollDice() {
         updateDiceValue(diceValue);
         updateDiceDisplay(diceValue);
         
-        // Joue un son quand le dé s'arrête
-        try {
-            const landSound = new Audio('../assets/dicelandBG.wav');
-            landSound.volume = 0.5;
-            landSound.play().catch(e => console.log('Pas de son disponible'));
-        } catch (e) {
-            console.log('Audio non supporté');
-        }
+ 
         
         // Après un délai pour montrer le résultat, cache l'overlay
         setTimeout(() => {
             // Cache l'overlay du dé
             diceOverlay.classList.remove('show');
-            
+                         // Joue un son quand le dé s'arrête
+                         try {
+                            landSound = new Audio('../assets/trn.wav');
+                            landSound.volume = 0.5;
+                           
+                            landSound.play().catch(e => console.log('Pas de son disponible'));
+                        } catch (e) {
+                            console.log('Audio non supporté');
+                        }
             // Si nous sommes sur l'écran de lancement du dé, passe au plateau de jeu
             if (document.getElementById('dice-screen').classList.contains('active-screen')) {
                 showScreen('board-screen');
@@ -275,6 +344,7 @@ function rollDice() {
             }
         }, 1500);
     }, 2500); // Augmenté à 2.5 secondes pour voir le dé qui tourne plus longtemps
+
 }
 
 // Passe au tour suivant

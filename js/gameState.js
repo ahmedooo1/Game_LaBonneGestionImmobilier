@@ -28,6 +28,7 @@ function resetGameState() {
     // Supprime spécifiquement la clé du jeu
     localStorage.removeItem(STORAGE_KEY);
     
+  
     // Crée une copie profonde de l'état initial
     const freshState = JSON.parse(JSON.stringify(INITIAL_GAME_STATE));
     

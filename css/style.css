@@ -645,7 +645,7 @@ input:checked + .slider:before {
 }
 
 .board-cell.facture {
-    background-color: #7f8c8d;
+    background-color: #db531e;
 }
 
 .board-cell.interaction {
@@ -657,7 +657,7 @@ input:checked + .slider:before {
 }
 
 .board-cell.pdb {
-    background-color: #9b59b6;
+    background-color: #36ce69;
 }
 
 .cell-icon {
