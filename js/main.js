@@ -82,7 +82,9 @@ function setupEventListeners() {
             } catch (e) {
                 console.log('Audio non supporté');
             }
-
+            const rollButton = document.getElementById('roll-button');
+            rollButton.style.display = "none";
+ 
     });   
 
     document.getElementById('continue-button').addEventListener('click', () => {
@@ -105,8 +107,8 @@ function setupEventListeners() {
     
     document.getElementById('roll-dice-button').addEventListener('click', () => {
         blamSoundEffect();
-               // Joue un son quand le dé s'arrête
-               dicelandBGSound();
+        // Joue un son quand le dé s'arrête
+        dicelandBGSound();
         // Démarre le timer du jeu dès qu'on lance le dé la première fois
         showScreen('board-screen');
         startGameTimer();
@@ -114,13 +116,24 @@ function setupEventListeners() {
     });
     
     document.getElementById('roll-button').addEventListener('click', () => {
+
         blamSoundEffect();
         rollDice();
+
+
+        const rollButton = document.getElementById('roll-button');
+         rollButton.style.display = "none";
+         const nextButton = document.getElementById('next-turn-button');
+         nextButton.style.display = "block";
     });
     
     document.getElementById('next-turn-button').addEventListener('click', () => {
         blamSoundEffect();
         nextTurn();
+        const rollButton = document.getElementById('roll-button');
+        rollButton.style.display = "block";
+        const nextButton = document.getElementById('next-turn-button');
+        nextButton.style.display = "none";
     });
     
     document.getElementById('exit-button').addEventListener('click', () => {
