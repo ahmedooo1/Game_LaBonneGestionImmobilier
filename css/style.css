@@ -895,15 +895,15 @@ input:checked + .slider:before {
 }
 
 .interaction-icon {
-    background-color: #6c5ce7;
+    background-color: var(--primary-color);
 }
 
 .pdb-icon {
-    background-color: #fd79a8;
+    background-color:   #00b894;
 }
 
 .biens-icon {
-    background-color: #00b894;
+    background-color: #ffffff;
 }
 
 .team-selection {
