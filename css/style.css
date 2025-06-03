@@ -862,6 +862,14 @@ input:checked + .slider:before {
     font-weight: bold;
 }
 
+.card-description {
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: #f0f0f0;
+    text-align: center;
+}
+
 .special-amount {
     font-family: 'Press Start 2P', cursive;
     font-size: 1.5rem;
