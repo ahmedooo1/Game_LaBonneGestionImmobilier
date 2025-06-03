@@ -58,8 +58,19 @@ function updateTeamScore(teamId, amount) {
     const gameState = getGameState();
     
     if (gameState.teams[teamId]) {
-        gameState.teams[teamId].score += amount;
+        // Convert amount to number to ensure proper addition
+        const numAmount = Number(amount);
+        
+        // Add the amount to the current score
+        gameState.teams[teamId].score += numAmount;
+        
+        // Log for debugging
+        console.log(`Team ${teamId} score updated: ${gameState.teams[teamId].score - numAmount} + ${numAmount} = ${gameState.teams[teamId].score}`);
+        
+        // Save the updated state
         updateGameState(gameState);
+    } else {
+        console.error(`Team with ID ${teamId} not found`);
     }
     
     return gameState;

@@ -26,12 +26,7 @@ function initGame() {
 function preloadAssets() {
     const ASSETS_PATH = 'assets/';
     const imagesToPreload = [
-        '2025-04-04 11_28_03-Window.png',
-        '2025-04-04 11_28_21-Window.png',
-        '2025-04-04 11_28_36-Window.png',
-        '2025-04-04 11_28_55-Window.png',
-        '2025-04-04 11_29_21-Window.png',
-        '2025-04-04 11_29_51-Window.png'
+        // Add your actual image files here if needed
     ];
     
     imagesToPreload.forEach(imagePath => {
@@ -418,12 +413,33 @@ function handleCellClick(cellId, cellType) {
 // Gestion des cartes selon leur type
 function handlePropertyCard() {
     const property = getRandomProperty();
-    showPropertyModal(property);
     
-    // Ajoute la valeur de la propriété au score de l'équipe
-    const gameState = getGameState();
-    updateTeamScore(gameState.activeTeam, property.value);
-    updateTeamsDisplay();
+    // Configurer le contenu du modal avant de l'afficher
+    document.getElementById('property-name').textContent = property.name;
+    document.getElementById('property-description').textContent = property.description || '';
+    document.getElementById('property-value-amount').textContent = `${property.value} K`;
+    
+    // Afficher le modal sous forme de carte qui se retourne
+    showFlipCardModal('property');
+    
+    // Configuration du bouton "Continuer"
+    document.getElementById('property-continue').onclick = () => {
+        closeFlipCardModal('property-modal');
+        
+        // Ajoute la valeur de la propriété au score de l'équipe
+        const gameState = getGameState();
+        console.log(`Updating property card: Adding ${property.value} to team ${gameState.activeTeam}`);
+        
+        // Log before update
+        debugTeamScores();
+        
+        updateTeamScore(gameState.activeTeam, property.value);
+        updateTeamsDisplay();
+        
+        // Log after update to verify
+        console.log("After property card update:");
+        debugTeamScores();
+    };
 }
 
 function handleBonusCard() {
@@ -466,12 +482,12 @@ function handleBonusCard() {
         descriptionElement.style.display = bonusCard.description ? 'block' : 'none';
     }
     
-    // Affiche la modale bonus
-    toggleModal('bonus-modal', true);
+    // Affiche la carte bonus avec l'animation de retournement
+    showFlipCardModal('bonus');
     
     // Quand l'utilisateur clique sur continuer, ferme la modale et applique l'effet
     document.getElementById('bonus-continue').onclick = () => {
-        toggleModal('bonus-modal', false);
+        closeFlipCardModal('bonus-modal');
         
         const gameState = getGameState();
         
@@ -490,7 +506,16 @@ function handleBonusCard() {
             updateGameState(gameState);
         } else if (bonusCard.amount) {
             // Applique le montant au score
+            console.log(`Updating bonus card: Adding ${bonusCard.amount} to team ${gameState.activeTeam}`);
+            
+            // Log before update
+            debugTeamScores();
+            
             updateTeamScore(gameState.activeTeam, bonusCard.amount);
+            
+            // Log after update to verify
+            console.log("After bonus card update:");
+            debugTeamScores();
         }
         
         updateTeamsDisplay();
@@ -513,12 +538,12 @@ function handleFactureCard() {
         descriptionElement.style.display = factureCard.description ? 'block' : 'none';
     }
     
-    // Affiche la modale facture
-    toggleModal('facture-modal', true);
+    // Affiche la carte facture avec l'animation de retournement
+    showFlipCardModal('facture');
     
     // Quand l'utilisateur clique sur payer, ferme la modale et met à jour le score
     document.getElementById('facture-continue').onclick = () => {
-        toggleModal('facture-modal', false);
+        closeFlipCardModal('facture-modal');
         
         // Retire le montant du score de l'équipe
         const gameState = getGameState();
@@ -527,79 +552,186 @@ function handleFactureCard() {
     };
 }
 
+/**
+ * Gère l'affichage et le traitement des cartes Biens
+ */
+function handleBiensCard() {
+    // Utilise les données des cartes biens
+    const biensCard = getRandomCard('biens');
+    
+    // Met à jour le texte dans la modale
+    document.getElementById('biens-text').textContent = biensCard.title;
+    document.getElementById('biens-amount').textContent = `+${biensCard.value} K`;
+    
+    // Affiche la description si disponible
+    const descriptionElement = document.getElementById('biens-description');
+    if (descriptionElement) {
+        descriptionElement.textContent = biensCard.description || '';
+        descriptionElement.style.display = biensCard.description ? 'block' : 'none';
+    }
+    
+    // Affiche la carte biens avec l'animation de retournement
+    showFlipCardModal('biens');
+    
+    // Quand l'utilisateur clique sur encaisser, ferme la modale et met à jour le score
+    document.getElementById('biens-continue').onclick = () => {
+        closeFlipCardModal('biens-modal');
+        
+        // Ajoute la valeur du bien au score de l'équipe
+        const gameState = getGameState();
+        
+        console.log(`Updating biens card: Adding ${biensCard.value} to team ${gameState.activeTeam}`);
+        
+        // Log before update
+        debugTeamScores();
+        
+        updateTeamScore(gameState.activeTeam, biensCard.value);
+        
+        // Log after update to verify
+        console.log("After biens card update:");
+        debugTeamScores();
+        
+        // Ajoute le bien à la liste des biens de l'équipe
+        if (!gameState.teams[gameState.activeTeam].properties) {
+            gameState.teams[gameState.activeTeam].properties = [];
+        }
+        
+        gameState.teams[gameState.activeTeam].properties.push({
+            id: biensCard.id,
+            title: biensCard.title,
+            description: biensCard.description,
+            value: biensCard.value
+        });
+        
+        updateGameState(gameState);
+    };
+}
+
 function handleInteractionCard() {
     // Utilise les données des cartes d'interaction
     const interactionCard = getRandomCard('interaction');
     
-    // Affiche d'abord la vidéo si nécessaire
-    showVideoModal('00:15');
+    // Configurer le contenu du modal de la carte d'interaction
+    document.getElementById('interaction-title').textContent = interactionCard.title || 'Interaction';
+    document.getElementById('interaction-description').textContent = interactionCard.description || '';
     
-    // Variable pour stocker la carte pour utilisation après la vidéo
+    // Afficher le modal sous forme de carte qui se retourne
+    showFlipCardModal('interaction');
+    
+    // Variable pour stocker la carte pour utilisation après le flip
     const gameState = getGameState();
     gameState.currentInteractionCard = interactionCard;
     updateGameState(gameState);
-    
-    // Après la vidéo, traite la carte d'interaction
-    document.getElementById('skip-video').onclick = () => {
-        toggleModal('video-modal', false);
+      // Configuration du bouton "Passer" pour l'interaction (utilisation du bouton existant)
+    document.getElementById('interaction-skip').onclick = () => {
+        closeFlipCardModal('interaction-modal');
         
-        // Récupère la carte d'interaction actuelle
-        const currentState = getGameState();
-        const card = currentState.currentInteractionCard;
+        // Affiche d'abord la vidéo si nécessaire
+        showVideoModal('00:15');
         
-        // Si c'est une carte qui affecte une autre équipe
-        if (card.type === 'team_effect') {
-            // Réinitialise le sélecteur d'équipes
-            const interactionTeamsContainer = document.getElementById('interaction-teams');
-            interactionTeamsContainer.innerHTML = '';
+        // Après la vidéo, traite la carte d'interaction
+        document.getElementById('skip-video').onclick = () => {
+            toggleModal('video-modal', false);
             
-            // Met à jour le titre et la description de l'interaction
-            document.getElementById('interaction-title').textContent = card.title || 'Interaction';
-            document.getElementById('interaction-description').textContent = card.description || '';
+            // Récupère la carte d'interaction actuelle
+            const currentState = getGameState();
+            const card = currentState.currentInteractionCard;
             
-            // Récupère la liste des équipes actives autres que celle qui joue
-            const activeTeams = Object.entries(currentState.teams)
-                .filter(([id, team]) => team.active && parseInt(id) !== currentState.activeTeam);
-            
-            // S'il y a d'autres équipes actives, affiche les options
-            if (activeTeams.length > 0) {
-                activeTeams.forEach(([id, team]) => {
-                    const teamOption = document.createElement('div');
-                    teamOption.className = `team-option team${id}-bg`;
-                    teamOption.textContent = team.name;
-                    teamOption.dataset.teamId = id;
-                    teamOption.dataset.effect = card.effect;
-                    teamOption.dataset.value = card.value;
-                    teamOption.onclick = () => handleTeamInteraction(parseInt(id), card.effect, card.value);
-                    interactionTeamsContainer.appendChild(teamOption);
-                });
+            // Si c'est une carte qui affecte une autre équipe
+            if (card.type === 'team_effect') {
+                // Réinitialise le sélecteur d'équipes
+                const interactionTeamsContainer = document.getElementById('interaction-teams');
+                interactionTeamsContainer.innerHTML = '';
                 
-                // Affiche la modale d'interaction
-                toggleModal('interaction-modal', true);
+                // Récupère la liste des équipes actives autres que celle qui joue
+                const activeTeams = Object.entries(currentState.teams)
+                    .filter(([id, team]) => team.active && parseInt(id) !== currentState.activeTeam);
                 
-                // Option pour passer
-                document.getElementById('interaction-skip').onclick = () => {
-                    toggleModal('interaction-modal', false);
+                // S'il y a d'autres équipes actives, affiche les options
+                if (activeTeams.length > 0) {
+                    activeTeams.forEach(([id, team]) => {
+                        const teamOption = document.createElement('div');
+                        teamOption.className = `team-option team${id}-bg`;
+                        teamOption.textContent = team.name;
+                        teamOption.dataset.teamId = id;
+                        teamOption.dataset.effect = card.effect;
+                        teamOption.dataset.value = card.value;
+                        teamOption.onclick = () => handleTeamInteraction(parseInt(id), card.effect, card.value);
+                        interactionTeamsContainer.appendChild(teamOption);
+                    });
                     
-                    // Bonus par défaut si la carte a un montant
-                    if (card.amount) {
-                        updateTeamScore(currentState.activeTeam, card.amount);
-                    } else {
-                        // Bonus par défaut si pas de montant spécifié
-                        const defaultBonus = 50;
-                        updateTeamScore(currentState.activeTeam, defaultBonus);
+                    // Affiche la modale de sélection d'équipe
+                    toggleModal('team-selection-modal', true);
+                    
+                    // Option pour passer
+                    document.getElementById('interaction-skip').onclick = () => {
+                        toggleModal('team-selection-modal', false);
+                        
+                        // Bonus par défaut si la carte a un montant
+                        if (card.amount) {
+                            console.log(`Updating interaction skip: Adding ${card.amount} to team ${currentState.activeTeam}`);
+                            
+                            // Log before update
+                            debugTeamScores();
+                            
+                            updateTeamScore(currentState.activeTeam, card.amount);
+                            
+                            // Log after update to verify
+                            console.log("After interaction skip update:");
+                            debugTeamScores();
+                        } else {
+                            // Bonus par défaut si pas de montant spécifié
+                            const defaultBonus = 50;
+                            
+                            console.log(`Updating interaction skip: Adding default ${defaultBonus} to team ${currentState.activeTeam}`);
+                            
+                            // Log before update
+                            debugTeamScores();
+                            
+                            updateTeamScore(currentState.activeTeam, defaultBonus);
+                            
+                            // Log after update to verify
+                            console.log("After interaction skip update:");
+                            debugTeamScores();
+                        }
+                        
+                        updateTeamsDisplay();
+                    };
+                } else {
+                    // S'il n'y a pas d'autres équipes actives, donne un bonus direct
+                    const amount = card.amount || getRandomInt(1, 3) * 50;
+                    
+                    // Met à jour le texte et le montant dans la modale bonus
+                    document.getElementById('bonus-text').textContent = card.title || 'Bonus';
+                    document.getElementById('bonus-amount').textContent = `+${amount} K`;
+                    document.getElementById('bonus-amount').classList.remove('danger-amount');
+                    
+                    // Affiche la description si disponible
+                    const bonusDescElement = document.getElementById('bonus-description');
+                    if (bonusDescElement) {
+                        bonusDescElement.textContent = card.description || '';
+                        bonusDescElement.style.display = card.description ? 'block' : 'none';
                     }
                     
-                    updateTeamsDisplay();
-                };
+                    // Affiche la modale bonus avec l'animation de retournement
+                    showFlipCardModal('bonus');
+                    
+                    // Quand l'utilisateur clique sur continuer, ferme la modale et met à jour le score
+                    document.getElementById('bonus-continue').onclick = () => {
+                        closeFlipCardModal('bonus-modal');
+                        
+                        // Ajoute le montant au score de l'équipe
+                        updateTeamScore(currentState.activeTeam, amount);
+                        updateTeamsDisplay();
+                    };
+                }
             } else {
-                // S'il n'y a pas d'autres équipes actives, donne un bonus direct
-                const amount = card.amount || getRandomInt(1, 3) * 50;
+                // Si c'est une carte qui affecte directement l'équipe courante
+                const amount = card.amount || getRandomInt(1, 3) * 25;
                 
                 // Met à jour le texte et le montant dans la modale bonus
                 document.getElementById('bonus-text').textContent = card.title || 'Bonus';
                 document.getElementById('bonus-amount').textContent = `+${amount} K`;
-                document.getElementById('bonus-amount').classList.remove('danger-amount');
                 
                 // Affiche la description si disponible
                 const bonusDescElement = document.getElementById('bonus-description');
@@ -608,65 +740,80 @@ function handleInteractionCard() {
                     bonusDescElement.style.display = card.description ? 'block' : 'none';
                 }
                 
-                // Affiche la modale bonus
-                toggleModal('bonus-modal', true);
+                // Affiche la modale bonus avec l'animation de retournement
+                showFlipCardModal('bonus');
                 
                 // Quand l'utilisateur clique sur continuer, ferme la modale et met à jour le score
                 document.getElementById('bonus-continue').onclick = () => {
-                    toggleModal('bonus-modal', false);
+                    closeFlipCardModal('bonus-modal');
+                    
+                    // Ajoute le montant au score de l'équipe
                     updateTeamScore(currentState.activeTeam, amount);
                     updateTeamsDisplay();
                 };
             }
-        } else {
-            // Pour les cartes qui n'affectent pas une autre équipe
-            const amount = card.amount || getRandomInt(10, 50);
+        };
+    };
+}
+
+/**
+ * Gère l'affichage et le traitement des cartes PDB (Pas de Bol)
+ */
+function handlePDBCard() {
+    // Utilise les données des cartes PDB
+    const pdbCard = getRandomCard('pdb');
+    const amount = pdbCard.amount || getRandomInt(10, 50); // Utilise un montant par défaut si nécessaire
+    
+    // Met à jour le texte et le montant dans la modale
+    document.getElementById('pdb-text').textContent = pdbCard.title;
+    document.getElementById('pdb-amount').textContent = `-${amount} K`;
+    
+    // Affiche la description si disponible
+    const descriptionElement = document.getElementById('pdb-description');
+    if (descriptionElement) {
+        descriptionElement.textContent = pdbCard.description || '';
+        descriptionElement.style.display = pdbCard.description ? 'block' : 'none';
+    }
+    
+    // Affiche la carte PDB avec l'animation de retournement
+    showFlipCardModal('pdb');
+    
+    // Quand l'utilisateur clique sur payer, ferme la modale et applique l'effet
+    document.getElementById('pdb-continue').onclick = () => {
+        closeFlipCardModal('pdb-modal');
+        
+        const gameState = getGameState();
+        
+        // Applique l'effet selon le type de carte
+        if (pdbCard.type === 'special') {
+            // Sauvegarde l'effet spécial pour l'équipe active
+            const teamState = gameState.teams[gameState.activeTeam];
+            if (!teamState.effects) teamState.effects = [];
             
-            // Si c'est un coût, utilise la modale facture
-            if (card.type === 'cost') {
-                document.getElementById('facture-text').textContent = card.title || 'Coût';
-                document.getElementById('facture-amount').textContent = `-${amount} K`;
-                
-                // Affiche la description si disponible
-                const factureDescElement = document.getElementById('facture-description');
-                if (factureDescElement) {
-                    factureDescElement.textContent = card.description || '';
-                    factureDescElement.style.display = card.description ? 'block' : 'none';
-                }
-                
-                // Affiche la modale facture
-                toggleModal('facture-modal', true);
-                
-                // Quand l'utilisateur clique sur payer, ferme la modale et met à jour le score
-                document.getElementById('facture-continue').onclick = () => {
-                    toggleModal('facture-modal', false);
-                    updateTeamScore(currentState.activeTeam, -amount);
-                    updateTeamsDisplay();
-                };
-            } else {
-                // Sinon utilise la modale bonus
-                document.getElementById('bonus-text').textContent = card.title || 'Bonus';
-                document.getElementById('bonus-amount').textContent = `+${amount} K`;
-                document.getElementById('bonus-amount').classList.remove('danger-amount');
-                
-                // Affiche la description si disponible
-                const bonusDescElement = document.getElementById('bonus-description');
-                if (bonusDescElement) {
-                    bonusDescElement.textContent = card.description || '';
-                    bonusDescElement.style.display = card.description ? 'block' : 'none';
-                }
-                
-                // Affiche la modale bonus
-                toggleModal('bonus-modal', true);
-                
-                // Quand l'utilisateur clique sur continuer, ferme la modale et met à jour le score
-                document.getElementById('bonus-continue').onclick = () => {
-                    toggleModal('bonus-modal', false);
-                    updateTeamScore(currentState.activeTeam, amount);
-                    updateTeamsDisplay();
-                };
-            }
+            teamState.effects.push({
+                type: pdbCard.effect,
+                value: pdbCard.value,
+                applied: false
+            });
+            
+            updateGameState(gameState);
+            
+            console.log(`Applied special effect: ${pdbCard.effect} with value ${pdbCard.value} to team ${gameState.activeTeam}`);
+        } else {
+            // Retire le montant du score de l'équipe (toujours négatif pour PDB)
+            console.log(`Updating PDB card: Removing ${amount} from team ${gameState.activeTeam}`);
+            
+            // Log before update
+            debugTeamScores();
+            
+            updateTeamScore(gameState.activeTeam, -amount);
+            
+            // Log after update to verify
+            console.log("After PDB card update:");
+            debugTeamScores();
         }
+        
+        updateTeamsDisplay();
     };
 }
 
@@ -700,146 +847,47 @@ function handleTeamInteraction(targetTeamId, effect, value) {
             ? `augmenter de ${value}%` 
             : `réduire de ${value}%`;
         
-        alert(`La prochaine facture de ${targetTeamName} va ${effectText}.`);
+        showNotification(`La prochaine facture de ${targetTeamName} va ${effectText}.`);
     } else {
         // Comportement par défaut : transfert d'argent
         const amount = value || 100; // Montant par défaut si non spécifié
         
+        console.log(`Team interaction: Transferring ${amount} from team ${targetTeamId} to team ${activeTeamId}`);
+        
+        // Log before update
+        debugTeamScores();
+        
         // Transfère de l'équipe cible vers l'équipe active
         updateTeamScore(activeTeamId, amount);
         updateTeamScore(targetTeamId, -amount);
+        
+        // Log after update to verify
+        console.log("After team interaction update:");
+        debugTeamScores();
+        
+        console.log(`Score updated: Active team ${activeTeamId}: +${amount}, Target team ${targetTeamId}: -${amount}`);
     }
     
-    // Met à jour l'affichage des équipes
+    // Met à jour l'affichage des équipes après les modifications de score
     updateTeamsDisplay();
 }
 
-/**
- * Gère l'affichage et le traitement des cartes Biens
- */
-function handleBiensCard() {
-    // Utilise les données des cartes biens
-    const biensCard = getRandomCard('biens');
+// Fonction pour déboguer les scores des équipes
+function debugTeamScores() {
+    const gameState = getGameState();
+    console.log("=== CURRENT TEAM SCORES ===");
     
-    // Met à jour le texte dans la modale
-    document.getElementById('biens-text').textContent = biensCard.title;
-    document.getElementById('biens-amount').textContent = `+${biensCard.value} K`;
-    
-    // Affiche la description si disponible
-    const descriptionElement = document.getElementById('biens-description');
-    if (descriptionElement) {
-        descriptionElement.textContent = biensCard.description || '';
-        descriptionElement.style.display = biensCard.description ? 'block' : 'none';
-    }
-    
-    // Affiche la modale biens
-    toggleModal('biens-modal', true);
-    
-    // Quand l'utilisateur clique sur encaisser, ferme la modale et met à jour le score
-    document.getElementById('biens-continue').onclick = () => {
-        toggleModal('biens-modal', false);
-        
-        // Ajoute la valeur du bien au score de l'équipe
-        const gameState = getGameState();
-        updateTeamScore(gameState.activeTeam, biensCard.value);
-        
-        // Ajoute le bien à la liste des biens de l'équipe
-        if (!gameState.teams[gameState.activeTeam].properties) {
-            gameState.teams[gameState.activeTeam].properties = [];
+    Object.entries(gameState.teams).forEach(([teamId, team]) => {
+        if (team.active) {
+            console.log(`Team ${teamId} (${team.name}): Score = ${team.score}`);
         }
-        
-        gameState.teams[gameState.activeTeam].properties.push({
-            id: biensCard.id,
-            title: biensCard.title,
-            description: biensCard.description,
-            value: biensCard.value
-        });
-        
-        updateGameState(gameState);
-        updateTeamsDisplay();
-    };
+    });
+    
+    console.log("==========================");
 }
 
-/**
- * Gère l'affichage et le traitement des cartes PDB (Problèmes divers et besoins)
- */
-function handlePDBCard() {
-    // Utilise les données des cartes PDB
-    const pdbCard = getRandomCard('pdb');
-    
-    // Affiche le titre de la carte
-    document.getElementById('pdb-text').textContent = pdbCard.title;
-    
-    // Gestion des effets spéciaux ou des montants
-    if (pdbCard.type === 'special') {
-        // Pour les cartes à effets spéciaux
-        let effectText = '';
-        
-        switch (pdbCard.effect) {
-            case 'reduction':
-                effectText = `-${pdbCard.value}% sur votre prochaine transaction`;
-                break;
-            case 'cancel_next':
-                effectText = 'Prochaine cession annulée';
-                break;
-            default:
-                effectText = 'Effet spécial';
-        }
-        
-        document.getElementById('pdb-amount').textContent = effectText;
-        document.getElementById('pdb-amount').classList.remove('danger-amount');
-    } else {
-        // Pour les cartes avec un montant
-        const amount = pdbCard.amount || getRandomAmount(pdbCard.minAmount, pdbCard.maxAmount);
-        const isPositive = amount > 0;
-        
-        document.getElementById('pdb-amount').textContent = isPositive 
-            ? `+${amount} K` 
-            : `-${Math.abs(amount)} K`;
-            
-        if (isPositive) {
-            document.getElementById('pdb-amount').classList.remove('danger-amount');
-        } else {
-            document.getElementById('pdb-amount').classList.add('danger-amount');
-        }
-    }
-    
-    // Affiche la description si disponible
-    const descriptionElement = document.getElementById('pdb-description');
-    if (descriptionElement) {
-        descriptionElement.textContent = pdbCard.description || '';
-        descriptionElement.style.display = pdbCard.description ? 'block' : 'none';
-    }
-    
-    // Affiche la modale PDB
-    toggleModal('pdb-modal', true);
-    
-    // Quand l'utilisateur clique sur continuer, ferme la modale et applique l'effet
-    document.getElementById('pdb-continue').onclick = () => {
-        toggleModal('pdb-modal', false);
-        
-        const gameState = getGameState();
-        
-        // Applique l'effet selon le type de carte
-        if (pdbCard.type === 'special') {
-            // Sauvegarde l'effet spécial pour l'équipe active
-            // À implémenter : stocker l'effet pour une application future
-            const teamState = gameState.teams[gameState.activeTeam];
-            if (!teamState.effects) teamState.effects = [];
-            
-            teamState.effects.push({
-                type: pdbCard.effect,
-                value: pdbCard.value,
-                applied: false
-            });
-            
-            updateGameState(gameState);
-        } else {
-            // Applique le montant au score
-            const amount = pdbCard.amount || getRandomAmount(pdbCard.minAmount, pdbCard.maxAmount);
-            updateTeamScore(gameState.activeTeam, -amount);
-        }
-        
-        updateTeamsDisplay();
-    };
-}
+// Appel automatique au démarrage pour vérifier l'état initial
+document.addEventListener('DOMContentLoaded', function() {
+    // Ajout d'un délai pour s'assurer que le jeu soit initialisé
+    setTimeout(debugTeamScores, 1000);
+});

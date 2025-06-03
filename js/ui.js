@@ -36,10 +36,14 @@ function updateTeamsDisplay() {
     document.getElementById('turn-counter').textContent = gameState.currentTurn;
     document.getElementById('active-team-name').textContent = gameState.teams[gameState.activeTeam].name;
     
+    console.log("Updating team displays with current scores:");
+    
     // Met à jour les blocs de score
     Object.keys(gameState.teams).forEach(teamId => {
         const team = gameState.teams[teamId];
         if (!team.active) return;
+        
+        console.log(`Team ${teamId} (${team.name}): Score = ${team.score}`);
         
         const scoreBlock = document.getElementById(`team${teamId}-score-block`);
         if (scoreBlock) {
@@ -51,6 +55,7 @@ function updateTeamsDisplay() {
             
             if (scoreElement) {
                 scoreElement.textContent = `${scorePrefix}${scoreAbsValue} K`;
+                console.log(`Updated score display for team ${teamId} to: ${scoreElement.textContent}`);
             }
             
             // Mise à jour du nom de l'équipe
@@ -58,6 +63,8 @@ function updateTeamsDisplay() {
             if (teamNameDiv) {
                 teamNameDiv.textContent = team.name;
             }
+        } else {
+            console.warn(`Score block for team ${teamId} not found in DOM`);
         }
     });
     
