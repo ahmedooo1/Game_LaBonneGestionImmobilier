@@ -42,7 +42,7 @@ function resetGameState() {
     freshState.currentTurn = 1;
     freshState.activeCard = null;
     freshState.dice = 1;
-    freshState.gameTime = 5 * 60; // 5 minutes
+    freshState.gameTime = 30 * 60; // 30 minutes
     freshState.timerStarted = false;
     freshState.gameBoard = generateInitialBoard();
     

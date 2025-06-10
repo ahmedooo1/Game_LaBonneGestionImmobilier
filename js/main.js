@@ -130,7 +130,13 @@ function setupEventListeners() {
         const nextButton = document.getElementById('next-turn-button');
         nextButton.style.display = "none";
     });
-    
+
+    // document.getElementById('bonus-continue').addEventListener('click', () => {
+    //     blamSoundEffect();
+    //     console.log('clické');
+    // });
+
+
     document.getElementById('exit-button').addEventListener('click', () => {
         blamSoundEffect();
         showExitModal();
@@ -174,7 +180,7 @@ function setupEventListeners() {
         // Réinitialise l'affichage du timer
         const timerElement = document.getElementById('game-timer');
         if (timerElement) {
-            timerElement.textContent = "05:00";
+            timerElement.textContent = "30:00";
             timerElement.classList.remove('warning', 'danger');
         }
         
@@ -211,6 +217,29 @@ function setupEventListeners() {
         toggleModal('exit-modal', false);
     });
 }
+function updateScoreBlocks(gameState) {
+    const scoreBlocksContainer = document.getElementById('score-blocks');
+    scoreBlocksContainer.innerHTML = ''; // Vide le conteneur avant de le remplir
+
+    Object.keys(gameState.teams).forEach(teamId => {
+        const team = gameState.teams[teamId];
+        if (team.active) {
+            const teamScoreBlock = document.createElement('div');
+            teamScoreBlock.className = `team-score-block team${teamId}`;
+            teamScoreBlock.id = `team${teamId}-score-block`;
+            teamScoreBlock.innerHTML = `
+                <div>Équipe ${teamId}</div>
+                <div class="score">0 K</div>
+            `;
+            scoreBlocksContainer.appendChild(teamScoreBlock);
+        }
+    });
+}
+
+// Exemple d'utilisation
+const gameState = getGameState();
+updateScoreBlocks(gameState);
+
 // Sauvegarde les informations des équipes
 function saveTeamSetup() {
     const gameState = getGameState();
@@ -246,6 +275,9 @@ function saveTeamSetup() {
     
     // Sauvegarde l'état mis à jour
     updateGameState(gameState);
+    
+    // Met à jour les blocs de score
+    updateScoreBlocks(gameState);
 }
 function dicelandBGSound(){
     try {
@@ -699,6 +731,7 @@ function handleInteractionCard() {
                     };
                 } else {
                     // S'il n'y a pas d'autres équipes actives, donne un bonus direct
+
                     const amount = card.amount || getRandomInt(1, 3) * 50;
                     
                     // Met à jour le texte et le montant dans la modale bonus
