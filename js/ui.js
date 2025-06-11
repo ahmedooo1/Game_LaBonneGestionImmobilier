@@ -36,14 +36,10 @@ function updateTeamsDisplay() {
     document.getElementById('turn-counter').textContent = gameState.currentTurn;
     document.getElementById('active-team-name').textContent = gameState.teams[gameState.activeTeam].name;
     
-    console.log("Updating team displays with current scores:");
-    
     // Met à jour les blocs de score
     Object.keys(gameState.teams).forEach(teamId => {
         const team = gameState.teams[teamId];
         if (!team.active) return;
-        
-        console.log(`Team ${teamId} (${team.name}): Score = ${team.score}`);
         
         const scoreBlock = document.getElementById(`team${teamId}-score-block`);
         if (scoreBlock) {
@@ -55,7 +51,6 @@ function updateTeamsDisplay() {
             
             if (scoreElement) {
                 scoreElement.textContent = `${scorePrefix}${scoreAbsValue} K`;
-                console.log(`Updated score display for team ${teamId} to: ${scoreElement.textContent}`);
             }
             
             // Mise à jour du nom de l'équipe
@@ -63,8 +58,6 @@ function updateTeamsDisplay() {
             if (teamNameDiv) {
                 teamNameDiv.textContent = team.name;
             }
-        } else {
-            console.warn(`Score block for team ${teamId} not found in DOM`);
         }
     });
     
@@ -512,7 +505,6 @@ function updateCurrentPlayerInfo() {
     }
 }
 
-
 function updateTeamPanels() {
     const gameState = getGameState();
     const panels = [
@@ -526,37 +518,38 @@ function updateTeamPanels() {
         if (!el) return;
         const team = gameState.teams[id];
         
-        if (team) {
+        if (team && team.active && team.players.length > 0) {
+            // Déterminer si cette équipe est l'équipe active
             const isActiveTeam = (id === gameState.activeTeam);
+            
+            // Créer le contenu HTML avec des styles appropriés
             let html = `<div class="team-name" style="color:var(--team${id}-color)">${team.name}</div>`;
             
-            if (team.players.length > 0) {
-                team.players.forEach((player, idx) => {
-                    const isActivePlayer = isActiveTeam && (idx === team.currentPlayer);
-                    const playerClass = isActivePlayer ? 'player current-player' : 'player';
-                    const playerStyle = isActivePlayer ? `style="color: var(--accent-color); font-weight: bold;"` : '';
-                    html += `<div class="${playerClass}" ${playerStyle}>${player}</div>`;
-                });
-            } else {
-                html += `<div class="no-players">Aucun joueur</div>`;
-            }
-            
-            // Si vous avez un score à afficher, ajoutez-le ici, par exemple :
-            if (typeof team.score !== 'undefined') {
-                html += `<div class="team-score">Score : ${team.score}</div>`;
-            }
+            // Afficher les joueurs de l'équipe
+            team.players.forEach((player, idx) => {
+                // Déterminer si ce joueur est le joueur actif
+                const isActivePlayer = isActiveTeam && (idx === team.currentPlayer);
+                
+                // Utiliser une classe spéciale pour le joueur actif
+                const playerClass = isActivePlayer ? 'player current-player' : 'player';
+                const playerStyle = isActivePlayer ? `style="color: var(--accent-color); font-weight: bold;"` : '';
+                
+                html += `<div class="${playerClass}" ${playerStyle}>${player}</div>`;
+            });
             
             el.innerHTML = html;
             el.style.display = 'flex';
             
+            // Mettre en évidence le panneau de l'équipe active
             if (isActiveTeam) {
                 el.classList.add('active-panel');
             } else {
                 el.classList.remove('active-panel');
             }
+            
         } else {
+            // Masquer le panneau si l'équipe n'est pas active
             el.style.display = 'none';
         }
     });
 }
-

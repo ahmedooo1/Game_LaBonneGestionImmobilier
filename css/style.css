@@ -28,17 +28,21 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     color: var(--light-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    padding: 1rem;
+  
 }
 
 .font-pixel {
     font-family: 'Press Start 2P', cursive;
 }
-
+.gameInterface{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+    min-height: 90vh;
+}
 /* Container et écrans */
 .game-container {
     width: 100%;
@@ -48,6 +52,7 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     position: relative;
+    
 }
 
 .screen {
@@ -171,11 +176,10 @@ h3 {
 /* Team Setup Screen */
 .teams-container {
     display: grid;
-    grid-template-columns: 300px 300px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin: 0 auto;
     max-width: 800px;
-    justify-content: center;
 }
 
 .team-card {
@@ -859,32 +863,16 @@ input:checked + .slider:before {
 .card-popup h3 {
     margin-top: 0.5rem;
     margin-bottom: 1rem;
-    background-color: var(--light-color);
-    padding: 8px;
-    border-radius: 10px;
     color: var(--primary-color);
     font-weight: bold;
-}
-
-.card-description {
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-bottom: 1rem;
-    color: #f0f0f0;
-    text-align: center;
 }
 
 .special-amount {
     font-family: 'Press Start 2P', cursive;
     font-size: 1.5rem;
-    /* background-color: rgba(255, 255, 255, 0.3); */
-    padding: 8px;
-    border-radius: 10px;
     color: var(--accent-color);
     margin: 1rem 0;
     animation: amount-pulse 1.5s infinite alternate;
-    /* -webkit-text-stroke-width: 0.1px;
-    -webkit-text-stroke-color: white; */
 }
 
 .danger-amount {
@@ -902,7 +890,11 @@ input:checked + .slider:before {
     color: white;
     background-color: var(--primary-color);
 }
-
+#soundButton{
+    border-radius: 10px;
+    opacity: 0.5;
+margin: 30px 0 0 100px;
+}
 .bonus-icon {
     background-color: var(--accent-color);
 }
@@ -1264,24 +1256,11 @@ input:checked + .slider:before {
 
 .team-score-block.team1 {
     background-color: #3498db;
-    width: 150px;
 }
 
 .team-score-block.team2 {
     background-color: #e74c3c;
     color: white;
-    width: 150px;
-}
-
-.team-score-block.team3 {
-    background-color: var(--team3-color);
-    width: 150px;
-}
-
-.team-score-block.team4{
-    background-color: var(--team4-color);
-    color: white;
-    width: 150px;
 }
 
 .player-list-bottom {

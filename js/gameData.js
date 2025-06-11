@@ -162,7 +162,7 @@ const INITIAL_GAME_STATE = {
     activeTeam: 1,
     activeCard: null,
     dice: 1,
-    gameTime: 30 * 60, // 30 minutes en secondes
+    gameTime: 5 * 60, // 5 minutes en secondes
     timerStarted: false,  // Indique si le timer a été démarré
     gameBoard: generateInitialBoard()
 };
