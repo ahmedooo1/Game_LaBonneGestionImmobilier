@@ -36,13 +36,20 @@ function resetGameState() {
     Object.keys(freshState.teams).forEach(teamId => {
         freshState.teams[teamId].score = 0;
         freshState.teams[teamId].position = 0;
+                freshState.teams[teamId].players = [
+            { name: 'Joueur 1', score: 0, scoreHistory: [0] },
+            { name: 'Joueur 2', score: 0, scoreHistory: [0] },
+            { name: 'Joueur 3', score: 0, scoreHistory: [0] },
+            { name: 'Joueur 4', score: 0, scoreHistory: [0] }
+        ];  // Les noms seront mis à jour via saveTeamSetup
+        freshState.teams[teamId].currentPlayer = 0;  // Index du joueur actuel
     });
     
     // Réinitialise les valeurs de jeu
     freshState.currentTurn = 1;
     freshState.activeCard = null;
     freshState.dice = 1;
-    freshState.gameTime = 5 * 60; // 5 minutes
+    freshState.gameTime = 30 * 60; // 30 minutes
     freshState.timerStarted = false;
     freshState.gameBoard = generateInitialBoard();
     
@@ -50,21 +57,80 @@ function resetGameState() {
     
     return freshState;
 }
+function updatePlayerTurn(player, description) {
+    if (!player.turnHistory) {
+        player.turnHistory = [];
+    }
+    player.turnHistory.push(description);  // Ajoute une description pour ce tour
+}
+function recalcTeamScore(teamId) {
+    const gameState = getGameState();
+    const team = gameState.teams[teamId];
+    if (!team) return;
 
+    team.score = team.players.reduce((sum, player) => sum + (player.score || 0), 0);
+    updateGameState(gameState);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const teamCards = document.querySelectorAll('.team-card');
+
+    teamCards.forEach(teamCard => {
+        const checkbox = teamCard.querySelector('.toggle input[type="checkbox"]');
+        const playerInputs = teamCard.querySelectorAll('.player-input');
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Remplir uniquement le premier champ avec une valeur par défaut
+                if (playerInputs[0]) {
+                    playerInputs[0].value = `Joueur 1`;
+                }
+            } else {
+                // Vider tous les champs si l'équipe est désactivée
+                playerInputs.forEach(input => {
+                    input.value = '';
+                });
+            }
+            // Sauvegarder la configuration de l'équipe
+            saveTeamSetup();
+        });
+    });
+});
 /**
  * Met à jour le score d'une équipe
  */
 function updateTeamScore(teamId, amount) {
     const gameState = getGameState();
     
-    if (gameState.teams[teamId]) {
-        gameState.teams[teamId].score += amount;
+    if (gameState.teams[teamId] && gameState.teams[teamId].players.length > 0) {
+        const currentPlayerIndex = gameState.teams[teamId].currentPlayer;
+        const player = gameState.teams[teamId].players[currentPlayerIndex];
+        
+        if (!player || typeof player !== 'object') {
+            console.error(`Erreur : Le joueur n'est pas un objet valide pour l'équipe ${teamId}.`);
+            return gameState;  // Arrêter pour éviter l'erreur
+        }
+        
+        const numAmount = Number(amount);
+        
+        if (!player.scoreHistory) {
+            player.scoreHistory = [0];  // Initialiser si absent
+        }
+        
+        player.score = player.score || 0;  // Initialiser score si absent
+        player.score += numAmount;
+        player.scoreHistory.push(player.score);  // Ajoute le nouveau score
+        
+        gameState.teams[teamId].score += numAmount;  // Mettre à jour le score d'équipe si nécessaire
+        
+        console.log(`Joueur ${currentPlayerIndex + 1} de l'équipe ${teamId} : Score mis à jour de ${player.score - numAmount} à ${player.score}`);
+        
         updateGameState(gameState);
+    } else {
+        console.error(`Team with ID ${teamId} not found or no players`);
     }
     
     return gameState;
 }
-
 /**
  * Passe au tour suivant
  */
@@ -111,6 +177,7 @@ function updateTeamActive(teamId, isActive) {
     if (gameState.teams[teamId]) {
         gameState.teams[teamId].active = isActive;
         updateGameState(gameState);
+
     }
     
     return gameState;

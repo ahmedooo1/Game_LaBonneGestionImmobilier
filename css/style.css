@@ -28,20 +28,19 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     color: var(--light-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
-  
+    padding: 1rem;
 }
 
 .font-pixel {
     font-family: 'Press Start 2P', cursive;
 }
-.gameInterface{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-    min-height: 90vh;
+#team-setup-screen,#dice-screen{
+        padding: 2rem;
+
 }
 /* Container et écrans */
 .game-container {
@@ -52,12 +51,11 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     position: relative;
-    
 }
 
 .screen {
     display: none;
-    padding: 2rem;
+    /* padding: 2rem; */
     height: 100%;
 }
 
@@ -176,10 +174,11 @@ h3 {
 /* Team Setup Screen */
 .teams-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 300px 300px;
     gap: 1.5rem;
     margin: 0 auto;
     max-width: 800px;
+    justify-content: center;
 }
 
 .team-card {
@@ -672,7 +671,13 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
 }
-
+.card-front-icon{
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .cell-icon svg {
     width: 100%;
     height: 100%;
@@ -859,24 +864,113 @@ input:checked + .slider:before {
     border: 2px solid #e5e5e5;
     padding: 1.5rem;
 }
+.modal {
+    display: none;  /* Si c'est là, changez-le en block ou remove-le */
+    position: fixed;  /* Assure que c'est affiché au-dessus */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);  /* Fond semi-transparent */
+    z-index: 1000;  /* Très important pour qu'il soit au-dessus des autres éléments */
+    overflow: auto;
+    color: #000;
+}
 
-.card-popup h3 {
-    margin-top: 0.5rem;
+    .history-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--secondary-color);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-width: 80%;
+        max-height: 100vh;
+        overflow-y: auto;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .history-modal h3 {
+        color: var(--light-color);
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .history-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .history-item h4 {
+        margin: 0 0 10px;
+        color: #555;
+        font-size: 18px;
+    }
+
+    .history-item p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .history-item .score-details {
+        margin-left: 20px;
+    }
+
+    .history-item .score-details p {
+        margin: 5px 0;
+        color: #888;
+    }
+#show-history-button{
+    color: #fff;
+}
+    .history-modal .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ff4757;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .history-modal .close-btn:hover {
+        background-color: #ff6b81;
+    }
+
+.card-description {
+    font-size: 0.9rem;
+    font-style: italic;
     margin-bottom: 1rem;
-    color: var(--primary-color);
-    font-weight: bold;
+    color: #f0f0f0;
+    text-align: center;
 }
 
 .special-amount {
     font-family: 'Press Start 2P', cursive;
     font-size: 1.5rem;
+    /* background-color: rgba(255, 255, 255, 0.3); */
+    padding: 8px;
+    border-radius: 10px;
     color: var(--accent-color);
     margin: 1rem 0;
     animation: amount-pulse 1.5s infinite alternate;
+    /* -webkit-text-stroke-width: 0.1px;
+    -webkit-text-stroke-color: white; */
 }
 
 .danger-amount {
     color: var(--danger-color);
+    -webkit-text-stroke-width: 0.1px;
+    -webkit-text-stroke-color: white;
 }
 
 .card-icon {
@@ -890,11 +984,7 @@ input:checked + .slider:before {
     color: white;
     background-color: var(--primary-color);
 }
-#soundButton{
-    border-radius: 10px;
-    opacity: 0.5;
-margin: 30px 0 0 100px;
-}
+
 .bonus-icon {
     background-color: var(--accent-color);
 }
@@ -1256,11 +1346,24 @@ margin: 30px 0 0 100px;
 
 .team-score-block.team1 {
     background-color: #3498db;
+    width: 150px;
 }
 
 .team-score-block.team2 {
     background-color: #e74c3c;
     color: white;
+    width: 150px;
+}
+
+.team-score-block.team3 {
+    background-color: var(--team3-color);
+    width: 150px;
+}
+
+.team-score-block.team4{
+    background-color: var(--team4-color);
+    color: white;
+    width: 150px;
 }
 
 .player-list-bottom {
@@ -1270,6 +1373,8 @@ margin: 30px 0 0 100px;
     max-width: 650px;
     border-radius: 6px;
     margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
 }
 
 .player-list-title {
@@ -1314,4 +1419,6 @@ margin: 30px 0 0 100px;
     padding: 0.3rem 0.8rem;
     border-radius: 4px;
     border-left: 3px solid #f6b93b;
+    display: flex;
+    align-items: center;
 }
