@@ -47,7 +47,7 @@ function showScoreHistory() {
                 const scoreHistory = player.scoreHistory || [0];  // Scores existants
                 const turnHistory = player.turnHistory || [];  // Nouvel historique des tours
                 
-                if (scoreHistory.length > 0 || turnHistory.length > 0) {
+                if (scoreHistory.length > 0) {
                     hasData = true;
                     historyHTML += `<div class="history-item">
                         <h4>Équipe ${teamId} - Joueur ${index + 1} (${player.name || 'Inconnu'})</h4>
@@ -55,8 +55,18 @@ function showScoreHistory() {
                     
                     scoreHistory.forEach((score, i) => {
                         const turnDetail = turnHistory[i] ? turnHistory[i].description : 'Aucune description';
+                        let changeDetail = '';  // Détail du changement
+                        
+                        if (i > 0) {
+                            const previousScore = scoreHistory[i - 1];
+                            const change = score - previousScore;  // Calcul de la différence
+                            const changeSign = change >= 0 ? '+' : '';  // Ajoute + pour positif
+                            changeDetail = `<p>Changement : ${changeSign}${change} (Score précédent: ${previousScore}, Score actuel: ${score})</p>`;
+                        }
+                        
                         historyHTML += `<div class="tour">
                             <p><strong>Tour ${i + 1}:</strong> Score = ${score}</p>
+                            ${changeDetail}  // Ajoute le détail du changement si i > 0
                             <p><strong>Détails:</strong> ${turnDetail}</p>
                         </div>`;
                     });
@@ -92,6 +102,51 @@ function showScoreHistory() {
     
     document.body.appendChild(modal);
     console.log('Modal ajouté au DOM avec styles modernes. Vérifiez dans les outils de développement.', modal);
+}
+// Ajoutez cela dans setupEventListeners() pour lier un bouton
+document.getElementById('show-history-button').addEventListener('click', showScoreHistory);  // Assurez-vous que le bouton existe dans HTML
+// Met à jour l'affichage des équipes et des scores
+function updateTeamsDisplay() {
+    const gameState = getGameState();
+    
+    // Met à jour les informations du tour
+    document.getElementById('turn-counter').textContent = gameState.currentTurn;
+    document.getElementById('active-team-name').textContent = gameState.teams[gameState.activeTeam].name;
+    
+    console.log("Updating team displays with current scores:");
+    
+    // Met à jour les blocs de score
+    Object.keys(gameState.teams).forEach(teamId => {
+        const team = gameState.teams[teamId];
+        if (!team.active) return;
+        
+        console.log(`Team ${teamId} (${team.name}): Score = ${team.score}`);
+        
+        const scoreBlock = document.getElementById(`team${teamId}-score-block`);
+        if (scoreBlock) {
+            const scoreElement = scoreBlock.querySelector('.score');
+            
+            // Affiche '+' pour les scores positifs, '-' pour les négatifs
+            const scorePrefix = team.score >= 0 ? '' : '-';
+            const scoreAbsValue = Math.abs(team.score);
+            
+            if (scoreElement) {
+                scoreElement.textContent = `${scorePrefix}${scoreAbsValue} K`;
+                console.log(`Updated score display for team ${teamId} to: ${scoreElement.textContent}`);
+            }
+            
+            // Mise à jour du nom de l'équipe
+            const teamNameDiv = scoreBlock.querySelector('div:first-child');
+            if (teamNameDiv) {
+                teamNameDiv.textContent = team.name;
+            }
+        } else {
+            console.warn(`Score block for team ${teamId} not found in DOM`);
+        }
+    });
+    
+    // Met à jour les informations du joueur actif
+    updateCurrentPlayerInfo();
 }
 // Ajoutez cela dans setupEventListeners() pour lier un bouton
 document.getElementById('show-history-button').addEventListener('click', showScoreHistory);  // Assurez-vous que le bouton existe dans HTML
