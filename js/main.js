@@ -904,58 +904,71 @@ function handlePDBCard() {
         updateTeamsDisplay();
     };
 }
+function showNotification(message) {
+    // Crée un élément de notification
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
 
+    // Ajoute la notification au corps du document
+    document.body.appendChild(notification);
+
+    // Supprime la notification après quelques secondes
+    setTimeout(() => {
+        notification.remove();
+    }, 3000); // Supprime après 3 secondes
+}
 // Gère l'interaction entre deux équipes
 function handleTeamInteraction(targetTeamId, effect, value) {
     const gameState = getGameState();
     const activeTeamId = gameState.activeTeam;
-    
+
     // Ferme la modale d'interaction
     toggleModal('interaction-modal', false);
-    
+
     // Traite l'effet selon son type
     if (effect === 'team_increase' || effect === 'team_reduction') {
         // Ajoute un effet à l'équipe cible
         if (!gameState.teams[targetTeamId].effects) {
             gameState.teams[targetTeamId].effects = [];
         }
-        
+
         gameState.teams[targetTeamId].effects.push({
             type: effect,
             value: value,
             applied: false,
             source: activeTeamId // L'équipe qui a appliqué cet effet
         });
-        
+
         updateGameState(gameState);
-        
+
         // Affiche un message pour confirmer l'action
         const targetTeamName = gameState.teams[targetTeamId].name;
         const effectText = effect === 'team_increase' 
             ? `augmenter de ${value}%` 
             : `réduire de ${value}%`;
-        
+
         showNotification(`La prochaine facture de ${targetTeamName} va ${effectText}.`);
     } else {
         // Comportement par défaut : transfert d'argent
         const amount = value || 100; // Montant par défaut si non spécifié
-        
+
         console.log(`Team interaction: Transferring ${amount} from team ${targetTeamId} to team ${activeTeamId}`);
-        
+
         // Log before update
         debugTeamScores();
-        
+
         // Transfère de l'équipe cible vers l'équipe active
         updateTeamScore(activeTeamId, amount);
         updateTeamScore(targetTeamId, -amount);
-        
+
         // Log after update to verify
         console.log("After team interaction update:");
         debugTeamScores();
-        
+
         console.log(`Score updated: Active team ${activeTeamId}: +${amount}, Target team ${targetTeamId}: -${amount}`);
     }
-    
+
     // Met à jour l'affichage des équipes après les modifications de score
     updateTeamsDisplay();
 }

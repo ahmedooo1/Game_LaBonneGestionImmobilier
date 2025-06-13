@@ -45,7 +45,7 @@ function showScoreHistory() {
         if (gameState.teams[teamId].active && gameState.teams[teamId].players) {
             gameState.teams[teamId].players.forEach((player, index) => {
                 const scoreHistory = player.scoreHistory || [0];  // Scores existants
-                const turnHistory = player.turnHistory || [];  // Nouvel historique des tours
+                const turnHistory = player.turnHistory || [];  // Nouvel historique des tours   
                 
                 if (scoreHistory.length > 0) {
                     hasData = true;
@@ -54,7 +54,7 @@ function showScoreHistory() {
                         <div class="score-details">`;
                     
                     scoreHistory.forEach((score, i) => {
-                        const turnDetail = turnHistory[i] ? turnHistory[i].description : 'Aucune description';
+                        const turnDetail = turnHistory[i] ? turnHistory[i].description : '=========';
                         let changeDetail = '';  // Détail du changement
                         
                         if (i > 0) {

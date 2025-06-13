@@ -368,7 +368,17 @@ input:checked + .slider:before {
     justify-self: center;
     transition: all 0.2s;
 }
-
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+}
 .dice.rolling .dot {
     transform: scale(1.2);
     background: radial-gradient(circle at 30% 30%, #ff0000, #990000);
